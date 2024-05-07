@@ -7,7 +7,6 @@ import Notifications from "./pages/Notifications";
 import Jobs from "./pages/Jobs";
 import AddJob from "./pages/AddJob";
 import Chats from "./pages/Chats";
-import Header from "./components/Header";
 
 function App() {
   return (
