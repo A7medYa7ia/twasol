@@ -1,16 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  signInStart,
-  signInSuccess,
-  signInFailure,
-} from "../redux/user/userSlice";
+import axios from "axios";
 export default function SignIn() {
   const [formData, setFormData] = useState({});
-  const { loading, error } = useSelector((state) => state.user);
+
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -19,26 +14,21 @@ export default function SignIn() {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      dispatch(signInStart());
-      const res = await fetch("/api/Authorization/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+
+    axios
+      .post("/api/Authorization/login", formData)
+      .then((res) => {
+        console.log(res);
+        if (res.data.success === true) {
+          const token = res.data.token;
+          localStorage.setItem("authToken", token);
+          console.log(res);
+          navigate("/");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
       });
-      const data = await res.json();
-      console.log(data);
-      if (data.success === false) {
-        dispatch(signInFailure(data.message));
-        return;
-      }
-      dispatch(signInSuccess(data));
-      navigate("/");
-    } catch (error) {
-      dispatch(signInFailure(error.message));
-    }
   };
   return (
     <div className="p-3 max-w-lg mx-auto">
@@ -66,11 +56,8 @@ export default function SignIn() {
           />
         </label>
 
-        <button
-          disabled={loading}
-          className="bg-blue-700 text-white w-28 p-3 place-content-center rounded-3xl self-center uppercase hover:opacity-95 disabled:opacity-80"
-        >
-          {error ? "Loading..." : "Sign in"}
+        <button className="bg-blue-700 text-white w-28 p-3 place-content-center rounded-3xl self-center uppercase hover:opacity-95 disabled:opacity-80">
+          sign in
         </button>
       </form>
 
@@ -84,7 +71,6 @@ export default function SignIn() {
       <Link className="flex justify-center items-center" to={"/sign-up"}>
         <span className="text-blue-700">Sign Up</span>
       </Link>
-      {error && <p className="text-red-500 mt-5">{error}</p>}
     </div>
   );
 }

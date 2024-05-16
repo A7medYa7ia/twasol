@@ -1,14 +1,43 @@
+import { useState } from "react";
 import Header from "../components/Header";
+import axios from "axios";
 
 export default function AddJob() {
+  const [formData, setFormData] = useState({});
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(localStorage.getItem("authToken"));
+    axios
+      .post(
+        `/api/Post/add-post?Title=${formData.Title}&Description=${formData.Description}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
-    <div>
+    <>
       <Header />
-      <body className="flex justify-center">
+      <div className="flex justify-center">
         <div className="w-4/6 flex flex-col p-4 m-4 rounded-xl bg-white  items-center   ">
           <h1 className=" text-center font-bold text-4xl">Add Job</h1>
 
-          <form className="w-5/6 mt-2">
+          <form onSubmit={handleSubmit} className="w-5/6 mt-2">
             <div className="mb-2">
               <label className="block font-bold" htmlFor="jobTitle">
                 Job Title
@@ -16,9 +45,10 @@ export default function AddJob() {
               <input
                 className="w-full p-8 h-5 rounded-xl border-2"
                 type="text"
-                id="jobTitle"
+                id="Title"
                 name="jobTitle"
                 required
+                onChange={handleChange}
               />
             </div>
             <div className="form-group">
@@ -30,7 +60,6 @@ export default function AddJob() {
                 type="text"
                 id="salary"
                 name="salary"
-                required
               />
             </div>
             <div className="mb-2">
@@ -39,10 +68,11 @@ export default function AddJob() {
               </label>
               <textarea
                 className="w-full p-2 rounded-xl border-2"
-                id="jobDescription"
+                id="Description"
                 name="jobDescription"
                 rows="4"
                 required
+                onChange={handleChange}
               ></textarea>
             </div>
             <button
@@ -53,7 +83,7 @@ export default function AddJob() {
             </button>
           </form>
         </div>
-      </body>
-    </div>
+      </div>
+    </>
   );
 }
