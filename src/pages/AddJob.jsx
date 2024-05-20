@@ -37,7 +37,7 @@ export default function AddJob() {
         <div className="w-4/6 flex flex-col p-4 m-4 rounded-xl bg-white  items-center   ">
           <h1 className=" text-center font-bold text-4xl">Add Job</h1>
 
-          <form onSubmit={handleSubmit} className="w-5/6 mt-2">
+          <form onSubmit={handleSubmit} className="w-5/6 mt-2 flex flex-col">
             <div className="mb-2">
               <label className="block font-bold" htmlFor="jobTitle">
                 Job Title
@@ -51,7 +51,7 @@ export default function AddJob() {
                 onChange={handleChange}
               />
             </div>
-            <div className="form-group">
+            {/* <div className="form-group">
               <label className="block font-bold" htmlFor="salary">
                 Salary
               </label>
@@ -61,7 +61,7 @@ export default function AddJob() {
                 id="salary"
                 name="salary"
               />
-            </div>
+            </div> */}
             <div className="mb-2">
               <label className="block font-bold" htmlFor="jobDescription">
                 Job Description
@@ -76,7 +76,7 @@ export default function AddJob() {
               ></textarea>
             </div>
             <button
-              className="p-2 bg-orange-900 rounded-2xl text-zinc-100"
+              className="p-2 bg-blue-700 rounded-2xl text-zinc-100 w-1/4 m-auto"
               type="submit"
             >
               Publish
